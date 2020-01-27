@@ -11,9 +11,6 @@ bookmarkRouter
     .get((req, res) => {
         res.json(bookmarks);
     })
-    
-bookmarkRouter
-    .route('/add-bookmark')
     .post(bodyParser, (req, res) => {
         const { title, url, description, rating } = req.body;
 
@@ -48,6 +45,16 @@ bookmarkRouter
 
 bookmarkRouter
     .route('/bookmark/:id')
+    .get((req, res) => {
+        const { id } = req.params;
+        const bookmark = bookmarks.find(b => b.id == id);
+
+        if (!bookmark) {
+            logger.error(`Bookmark with id ${id} not found`);
+            return res.status(404).send('Bookmark not found');
+        }
+        res.json(bookmark)
+    })
     .delete((req, res) => {
         const { id } = req.params;
 
